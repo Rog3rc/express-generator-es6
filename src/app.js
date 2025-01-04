@@ -1,22 +1,22 @@
 import createError from 'http-errors';
 import express from 'express';
-import path from 'path';
+import { join } from 'node:path';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import { __dirname, PORT } from './configs.js';
+import { __dirname, ENV } from './config.js';
 import routes from './routes/index.routes.js';
 
 const app = express();
 
 // View engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(join(__dirname, 'public')));
 
 // Create set routes
 routes.forEach(({ url, method, handler }) => {
@@ -41,8 +41,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log('Listening on PORT', PORT);
+app.listen(ENV.PORT, () => {
+  console.log('Listening on PORT', ENV.PORT);
 });
 
 export default app;
